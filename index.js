@@ -35,13 +35,16 @@ const Circle = require('./lib/circle.js');
       let renderedLogo;
         switch (answers.shape) {
           case 'triangle':
-            renderedLogo = new Triangle(answers.text.trim(), answers.textColor.trim(), answers.shapeColor.trim()).render();
+            renderedLogo = new Triangle(answers.text.trim(), answers.textColor.trim(), answers.shapeColor.trim());
+            renderedLogo.renderTriangle();
             break;
           case 'square':
-            renderedLogo = new Square(answers.text.trim(), answers.textColor.trim(), answers.shapeColor.trim()).render();
+            renderedLogo = new Square(answers.text.trim(), answers.textColor.trim(), answers.shapeColor.trim());
+            renderedLogo.renderSquare();
             break;
           case 'circle':
-            renderedLogo = new Circle(answers.text.trim(), answers.textColor.trim(), answers.shapeColor.trim()).render();
+            renderedLogo = new Circle(answers.text.trim(), answers.textColor.trim(), answers.shapeColor.trim());
+            renderedLogo.renderCircle();
             break;
           default:
             throw new Error('Please choose a shape');
