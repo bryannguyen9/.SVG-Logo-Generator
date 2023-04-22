@@ -41,6 +41,12 @@ const questions = [
       case 'square':
         shape = new Square(answers.shapeColor);
         break;
-      default:
-        throw new Error('Invalid shape choice');
-    }});
+    }
+    // used render method in order to translate user inputted color and text into svg file
+    shape.setColor(answers.shapeColor);
+    const svg = shape.render(answers.text, answers.textColor);
+    fs.writeFile('logo.svg', svg, (err) => {
+      if (err) throw err;
+      console.log('Generated logo.svg');
+    });
+  });
