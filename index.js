@@ -1,52 +1,63 @@
+const inquirer =  require('inquirer');
 const fs = require('fs');
-const path = require('path');
-const svgCaptcha = require('svg-captcha');
-const inquirer = require('inquirer');
+// const Triangle = require('./lib/triangle.js');
+// const Square = require('./lib/square.js');
+// const Circle = require('./lib/circle.js');
 
-const questions = [
-    {
-      type: 'input',
-      name: 'text',
-      message: 'Enter up to three characters for the logo text:',
-      validate: input => input.length <= 3 || 'Please enter up to three characters'
-    },
-    {
-      type: 'input',
-      name: 'textColor',
-      message: 'Enter a color keyword or hexadecimal number for the text:'
-    },
-    {
-      type: 'list',
-      name: 'shape',
-      message: 'Select a shape:',
-      choices: ['circle', 'triangle', 'square']
-    },
-    {
-      type: 'input',
-      name: 'shapeColor',
-      message: answers => `Enter a color keyword or hexadecimal number for the ${answers.shape}:`
-    }
-  ];
-
-  inquirer.prompt(questions).then(answers => {
-    // Create shape object based on user's choice
-    let shape;
-    switch (answers.shape) {
-      case 'circle':
-        shape = new Circle(answers.shapeColor);
-        break;
-      case 'triangle':
-        shape = new Triangle(answers.shapeColor);
-        break;
-      case 'square':
-        shape = new Square(answers.shapeColor);
-        break;
-    }
-    // used render method in order to translate user inputted color and text into svg file
-    shape.setColor(answers.shapeColor);
-    const svg = shape.render(answers.text, answers.textColor);
-    fs.writeFile('logo.svg', svg, (err) => {
-      if (err) throw err;
-      console.log('Generated logo.svg');
+  inquirer
+    .prompt([
+        {
+        type: 'input',
+        name: 'text',
+        message: 'Enter up to three characters for the logo text:',
+        validate: input => input.length <= 3 || 'Please enter up to three characters'
+        },
+        {
+        type: 'input',
+        name: 'textColor',
+        message: 'Enter a color keyword or hexadecimal number for the text:',
+        validate: input => !isNaN(parseInt(input)) ? 'Color must be a color keyword or hexadecimal value ie) blue or #0000FF' : true
+        },
+        {
+        type: 'list',
+        name: 'shape',
+        message: 'Select a shape:',
+        choices: ['circle', 'triangle', 'square']
+        },
+        {
+        type: 'input',
+        name: 'shapeColor',
+        message: answers => `Enter a color keyword or hexadecimal number for the ${answers.shape}:`,
+        validate: input => !isNaN(parseInt(input)) ? 'Color must be a color keyword or hexadecimal value ie) blue or #0000FF' : true
+        }
+    ])
+    .then((answers)=>{
+        switch (answers.desired_shape[0]){
+          case 'Triangle':
+            const renderedTriangle = new Triangle(answers.text.trim(), answers.textColor.trim(), answers.shapeColor.trim()).render();
+            return renderedTriangle;
+          case 'Square':
+            const renderedSquare = new Square(answers.text.trim(), answers.textColor.trim(), answers.shapeColor.trim()).render();
+            return renderedSquare;
+          case 'Circle':
+            const renderedCircle = new Circle(answers.text.trim(), answers.textColor.trim(), answers.shapeColor.trim()).render();
+            return renderedCircle;
+          default:
+            throw new Error('Please choose a shape');
+        };
+      })
+    .then((renderedLogo)=>{
+        return new Promise((resolve, reject) => {
+            fs.writeFile('./examples/renderedShape.svg', renderedLogo, (err) => {
+                if (err) {
+                reject(err);
+                } else {
+                console.log('Your SVG has been generated! Please check ./examples/');
+                resolve();
+                }
+            });
+        });
+    })
+    .catch((err)=>{
+        console.log(err)
     });
-  });
