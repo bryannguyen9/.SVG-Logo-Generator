@@ -1,5 +1,6 @@
 const inquirer =  require('inquirer');
 const fs = require('fs');
+const { render } = require('./lib/render.js');
 const Triangle = require('./lib/triangle.js');
 const Square = require('./lib/square.js');
 const Circle = require('./lib/circle.js');
@@ -51,18 +52,18 @@ const Circle = require('./lib/circle.js');
         }
         return renderedLogo;
       })
-    .then((renderedLogo)=>{
-      return new Promise((resolve, reject) => {
-          fs.writeFile('./examples/renderedShape.svg', renderedLogo, (err) => {
-              if (err) {
-              reject(err);
-              } else {
-              console.log('Your SVG has been generated! Please check ./examples/');
-              resolve();
-              }
-          });
-      });
-    })
+      .then((renderedLogo)=>{
+        return new Promise((resolve, reject) => {
+            fs.writeFile('./examples/renderedShape.svg', renderedLogo.toString(), (err) => {
+                if (err) {
+                reject(err);
+                } else {
+                console.log('Your SVG has been generated! Please check ./examples/');
+                resolve();
+                }
+            });
+        });
+      })
     .catch((err)=>{
       console.log(err)
     });
