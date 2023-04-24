@@ -54,7 +54,7 @@ const Circle = require('./lib/circle.js');
       })
       .then((renderedLogo)=>{
         return new Promise((resolve, reject) => {
-            fs.writeFile('./examples/renderedShape.svg', renderedLogo.toString(), (err) => {
+            fs.writeFile('./examples/logo.svg', renderedLogo.toString(), (err) => {
                 if (err) {
                 reject(err);
                 } else {
